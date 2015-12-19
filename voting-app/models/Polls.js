@@ -4,7 +4,7 @@ var PollSchema = new mongoose.Schema({
   title: String,
   link: String,
   upvotes: {type: Number, default: 0},
-  _creator: { type: Number, ref: 'User'},
+  _creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   choices: [{
     choiceText: String,
     votes: {

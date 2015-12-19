@@ -23,9 +23,9 @@
 
     <div id="debug" class="row">
       <pre>
-        {{item | json}}
+        {{item | json}}<br>
         {{polls | json}}
-        {{getUser()}}
+        
       </pre>
     </div>
 
@@ -35,6 +35,11 @@
 
     <script type="text/ng-template" id="/polls.html">
       <% include ../views/partials/poll %>
+    </script>
+    
+    <script type="text/ng-template" id="mypolls.html">
+      
+      <% include ../views/partials/myPoll %>
     </script>
 
 

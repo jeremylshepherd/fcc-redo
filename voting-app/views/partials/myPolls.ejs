@@ -1,0 +1,4 @@
+<div class="col-sm-10" ng-repeat="poll in polls" ng-click="this.show = !this.show">
+    <canvas ng-hide="this.show"></canvas>
+    <p ng-show="this.show"><span>{{poll.title}}</span><button class="btn btn-danger" ng-click="deletePoll(poll)">Delete</button></p>
+</div>

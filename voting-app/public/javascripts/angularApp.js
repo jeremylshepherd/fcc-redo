@@ -162,41 +162,13 @@ app.factory('polls', ['$http', 'auth', function($http, auth) {
   return o;
 }]);
 
-//****************************************************************************||
-//***********          **    ****************      ***********   ***   *******||
-//***********          **    ***************        *********   *****   ******||
-//***********   *********    **************   ****   ********   **************||
-//***********   *********    *************   ******   *******   ***      *****||
-//***********         ***    ************              ******   ******  ******||
-//***********   *********    ***********   **********   *****    ****   ******||
-//***********   *********          ****   ************   *****        ********||
-/******************************************************************************/
-app.factory('user', ['$http', 'auth', '$window', function($http, auth, $window) {
-  var u ={};
-  
-  u.getUser = function(){
-      var n = {}
-      if(auth.isLoggedIn()){
-        var token = auth.getToken();
-        var payload = JSON.parse($window.atob(token.split('.')[1]));
-        n.id = payload._id;
-        n.username = payload.username;
-        return n;
-      }
-    };
-  
-  return u;
-  
-}]);
 app.controller('MainCtrl', [
   '$scope',
   '$state',
   'polls',
   'auth',
-  'user',
-  function($scope, $state, polls, auth, user) {
+  function($scope, $state, polls, auth) {
     $scope.polls = polls.polls;
-    $scope.user = function(){user.getUser;}();
     $scope.placeholders = ['Coke', 'Pepsi'];
     $scope.item = function(arr){
       var newArr = [];
@@ -238,9 +210,6 @@ app.controller('MainCtrl', [
     $scope.deletePoll = function(poll) {
       polls.deletePoll(poll);
     };
-
-    $scope.getUser = user.getUser;
-
   }
 ]);
 
