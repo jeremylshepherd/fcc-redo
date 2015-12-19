@@ -24,7 +24,7 @@ router.get('/polls', function(req, res, next) {
 
 router.post('/polls', auth, function(req, res, next) {
   var poll = new Poll(req.body);
-  poll._creator = req.payload.id;
+  poll._creator = req.payload._id;
 
   poll.save(function(err, poll) {
     if(err) { return next(err); }
@@ -111,6 +111,7 @@ router.post('/polls/:poll/comments', auth, function(req, res, next) {
   });
 });
 
+
 router.put('/polls/:poll/comments/:comment/upvote', auth, function(req, res, next) {
   req.comment.upvote(function(err, comment) {
     if(err) { return next(err); }
@@ -148,6 +149,7 @@ router.post('/login', function(req, res, next){
 
     if(user){
       console.log('success');
+      res.json(req.user);
       return res.json({token: user.generateJWT()});
     } else {
       return res.status(401).json(info);
