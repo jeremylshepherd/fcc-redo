@@ -1,0 +1,8 @@
+<div class="row">
+    <h3>{{poll.title}}</h3>
+    <form class="form-horizontal" ng-submit="vote()">
+        <input type="radio" ng-repeat="choice in choices" value="{{choice.choiceText}}">
+        <button type="submit" class="btn btn-success"></button>
+    </form>
+            
+</div>
