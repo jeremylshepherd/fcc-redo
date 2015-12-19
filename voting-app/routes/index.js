@@ -57,7 +57,7 @@ router.param('comment', function(req, res, next, id) {
   });
 });
 
-router.get('/polls/:poll', function(req, res) {
+router.get('/polls/:poll', function(req, res, next) {
   req.poll.populate('comments', function(err, poll) {
     if(err) { return next(err); }
 
@@ -104,15 +104,16 @@ router.post('/register', function(req, res, next){
   }
 
   var user = new User();
-
+  
+  user.name = req.body.name;
   user.username = req.body.username;
 
-  user.setPassword(req.body.password)
+  user.setPassword(req.body.password);
 
   user.save(function (err){
     if(err){ return next(err); }
 
-    return res.json({token: user.generateJWT()})
+    return res.json({token: user.generateJWT()});
   });
 });
 
@@ -135,7 +136,7 @@ router.post('/login', function(req, res, next){
 
 
 router.get('/polls', function(req, res, next) {
-  Poll.find(function(err, posts){
+  Poll.find(function(err, polls){
     if(err){
       return next(err);
     }
@@ -146,7 +147,7 @@ router.get('/polls', function(req, res, next) {
 
 router.put('/polls/:poll', auth, function(req, res, next) {
 
-  poll.save()(function(err, poll){
+  Poll.save()(function(err, poll){
     if(err){return next(err);}
     res.json(poll);
   });

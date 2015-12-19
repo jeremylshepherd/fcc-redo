@@ -25,7 +25,6 @@ UserSchema.methods.generateJWT = function() {
   // var testExp = parseInt(exp.getTime() / 1000);
   return jwt.sign({
     _id: this._id,
-    name: this.name,
     username: this.username,
     expiresIn: '60Days'
   }, 'SECRET');
