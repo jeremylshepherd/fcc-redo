@@ -1,0 +1,25 @@
+<div ng-repeat="poll in polls | orderBy:'-upvotes'">
+  <span class="glyphicon glyphicon-thumbs-up"
+    ng-click="incrementUpvotes(poll)"></span>
+  {{poll.upvotes}}
+  <span><pre>
+  {{poll | json}}
+  </pre></span>
+  <span style="font-size:20px; margin-left:10px;">
+    <a ng-show="poll.link" href="{{poll.link}}">
+      {{poll.title}}
+    </a>
+    <span ng-hide="poll.link">
+      {{poll.title}}
+    </span>
+    <div ng-repeat="choice in choices">
+      <span>{{choice.choiceText}}</span>
+    </div>
+    <span>
+      created by <a>{{poll.author}}</a>
+    </span>
+    <span>
+      <a href="#/polls/{{poll._id}}">Comments</a>
+    </span>
+  </span>
+</div>

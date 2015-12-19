@@ -1,0 +1,52 @@
+<form ng-submit="addPoll()" ng-show="isLoggedIn()" style="margin-top:30px;" name="newForm">
+  <h5>Name your poll</h5>
+  <div ng-hide="isLoggedIn()">
+    <<h3>You need to <a href="/#/login">Log In</a> of <a href="/#/register">Register</a> before you can create a poll.</h3>
+  </div>
+
+  <div class="form-group">
+    <input type="text"
+      class="form-control"
+      placeholder="Title"
+      ng-model="title"></input>
+  </div>
+
+
+  <h5>Options</h5>
+  <div class="form-group" id="choices">
+    <input type="text"
+    class="form-control"
+    placeholder="{{placeholders[$index]}}"
+    ng-model="item[$index].choiceText" ng-repeat="placeholder in placeholders"></input>
+  </div>
+  <p>
+    <button type="button" class="btn btn-default" ng-click="addChoices()">More Options</button>
+    <button type="submit" class="btn btn-success">poll</button>
+  </p>
+</form>
+
+<div class="container-fluid" ng-hide="isLoggedIn()">
+  <div class="row">
+    <div class="col-md-4 col-xs-12">
+      <i class="fa fa-bolt"></i>
+      <h2>Live Results</h2>
+      <p>
+        Live graphs show your poll results immediately in an easy to understand format. One graph will not provide the whole picture, that's why we provide multiple graph types to better describe your results.
+      </p>
+    </div>
+    <div class="col-md-4 col-xs-12">
+      <i class="fa fa-globe"></i>
+      <h2>Works Everywhere</h2>
+      <p>
+        Traditional desktop computers now represent only 30% of Internet traffic. Your poll must work on the tablets, smart phones, netbooks and notebooks that your visitors are using. Our responsive designs do just that.
+      </p>
+    </div>
+    <div class="col-md-4 col-xs-12">
+      <i class="fa fa-facebook"></i>
+      <h2>Social Integration</h2>
+      <p>
+        Free integrated facebook or traditional comments allow your poll voters to provide immediate feedback and discuss results. Social share buttons encourage your poll voters to help spread the word.
+      </p>
+    </div>
+  </div>
+</div>

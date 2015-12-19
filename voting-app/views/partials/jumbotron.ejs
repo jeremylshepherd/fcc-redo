@@ -1,0 +1,19 @@
+<div class="jumbotron" ng-hide="isLoggedIn()">
+  <h1>VotePlex</h1>
+  <p class="lead">
+    Create custom polls with live results
+  </p>
+  <p>
+    <a id="signJumbo" class="btn btn-lg btn-success" ng-href="#/register">Sign up</a>
+  </p>
+</div>
+<div class="jumbotron" ng-show="isLoggedIn()">
+  <h1>Dashboard</h1>
+  <p class="lead">
+    What would you like to do today?
+  </p>
+  <p>
+    <a class="btn btn-lg btn-success" ng-href="#/">New Poll</a>
+    <a class="btn btn-lg btn-primary" ng-href="#/">My Polls</a>
+  </p>
+</div>

@@ -1,0 +1,31 @@
+<div class="header" ng-controller="NavCtrl">
+  <div class="navbar navbar-default" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#js-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#/">VotePlex</a>
+      </div>
+
+      <div class="collapse navbar-collapse" id="js-navbar-collapse">
+
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="#/home">Home</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right" ng-show="isLoggedIn()">
+          <li><a ng-href="#/">Welcome {{currentUser()}}!</a></li>
+          <li><a ng-href="#/settings"><i class="fa fa-cogs"></i></a></li>
+          <li><a ng-href="#/" ng-click="logOut()">Logout</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right" ng-hide="isLoggedIn()">
+          <li><a ng-href="#/register">Sign up</a></li>
+          <li><a ng-href="#/login">Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
