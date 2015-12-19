@@ -24,7 +24,7 @@ router.get('/polls', function(req, res, next) {
 
 router.post('/polls', auth, function(req, res, next) {
   var poll = new Poll(req.body);
-  poll.author = req.payload.username;
+  poll._creator = req.payload.id;
 
   poll.save(function(err, poll) {
     if(err) { return next(err); }
@@ -57,6 +57,18 @@ router.param('comment', function(req, res, next, id) {
   });
 });
 
+router.param('user', function(req, res, next, id) {
+  var query = User.findById(id);
+
+  query.exec(function(err, user) {
+    if(err) { return next(err); }
+    if(!user) { return next(new Error("can't find poll")); }
+
+    req.user = user;
+    return next();
+  });
+});
+
 router.get('/polls/:poll', function(req, res, next) {
   req.poll.populate('comments', function(err, poll) {
     if(err) { return next(err); }
@@ -64,6 +76,15 @@ router.get('/polls/:poll', function(req, res, next) {
     res.json(poll);
   });
 });
+
+router.get('/polls/:poll', function(req, res, next) {
+  req.poll.populate('_creator', function(err, poll) {
+    if(err) { return next(err); }
+
+    res.json(poll);
+  });
+});
+
 
 router.put('/polls/:poll/upvote', auth, function(req, res, next) {
   req.poll.upvote(function(err, poll) {

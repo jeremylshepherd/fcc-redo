@@ -162,13 +162,41 @@ app.factory('polls', ['$http', 'auth', function($http, auth) {
   return o;
 }]);
 
+//****************************************************************************||
+//***********          **    ****************      ***********   ***   *******||
+//***********          **    ***************        *********   *****   ******||
+//***********   *********    **************   ****   ********   **************||
+//***********   *********    *************   ******   *******   ***      *****||
+//***********         ***    ************              ******   ******  ******||
+//***********   *********    ***********   **********   *****    ****   ******||
+//***********   *********          ****   ************   *****        ********||
+/******************************************************************************/
+app.factory('user', ['$http', 'auth', '$window', function($http, auth, $window) {
+  var u ={};
+  
+  u.getUser = function(){
+      var n = {}
+      if(auth.isLoggedIn()){
+        var token = auth.getToken();
+        var payload = JSON.parse($window.atob(token.split('.')[1]));
+        n.id = payload._id;
+        n.username = payload.username;
+        return n;
+      }
+    };
+  
+  return u;
+  
+}]);
 app.controller('MainCtrl', [
   '$scope',
   '$state',
   'polls',
   'auth',
-  function($scope, $state, polls, auth) {
+  'user',
+  function($scope, $state, polls, auth, user) {
     $scope.polls = polls.polls;
+    $scope.user = function(){user.getUser;}();
     $scope.placeholders = ['Coke', 'Pepsi'];
     $scope.item = function(arr){
       var newArr = [];
@@ -201,7 +229,7 @@ app.controller('MainCtrl', [
 	  $scope.logOut = auth.logOut;
 
     $scope.addChoices = function(){
-      var formId = angular.element( document.querySelector('#choices') );
+      // var formId = angular.element( document.querySelector('#choices') );
       $scope.placeholders.push('More Options ' + $scope.placeholders.length);
       /* var newInp = '<input type="text" class="form-control" placeholder="{{"Option " + $scope.placeholders.length}}" + $scope.placholders.length " ng-model="choices[$index + 1].choiceText">';
        formId.append(newInp);*/
@@ -211,6 +239,7 @@ app.controller('MainCtrl', [
       polls.deletePoll(poll);
     };
 
+    $scope.getUser = user.getUser;
 
   }
 ]);
@@ -272,12 +301,6 @@ app.controller('PollsCtrl', [
         alert($scope.isLoggedIn());
         console.log("I'm working");
       };
-
-      $scope.addChoices = function(){
-        var formId = angular.element( document.querySelector('#choices') );
-        var newInp = '<input type="text" class="form-control" placeholder="Pepsi" ng-model="choices[$index].choiceText"></input>'
-      };
-
   }
 ]);
 
