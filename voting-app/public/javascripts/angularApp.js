@@ -23,6 +23,15 @@ app.config([
             return polls.get($stateParams.id);
           }]
         }
+      }).state('user', {
+        url: '/:id',
+        templateUrl: '/myPolls.html',
+        controller: 'UserCtrl',
+        resolve: {
+          user: ['$stateParams', 'user', function($stateParams, user) {
+            return user.get($stateParams.id);
+          }]
+        }
       }).state('login', {
         url: '/login',
         templateUrl: '/login.html',
@@ -162,13 +171,30 @@ app.factory('polls', ['$http', 'auth', function($http, auth) {
   return o;
 }]);
 
+app.factory('user', ['$http', 'auth', '$window', function($http, auth, $window) {
+    var u = {};
+    u.get = function(){
+      if(auth.isLoggedIn()){
+        var token = auth.getToken();
+        var payload = JSON.parse($window.atob(token.split('.')[1]));
+        return $http.get('/' + payload._id).then(function(res){
+          return res.data;
+          });
+      }
+    };
+    
+    return u;
+    
+  }]);
 app.controller('MainCtrl', [
   '$scope',
   '$state',
   'polls',
+  // 'user',
   'auth',
   function($scope, $state, polls, auth) {
     $scope.polls = polls.polls;
+    // $scope.user = user;
     $scope.placeholders = ['Coke', 'Pepsi'];
     $scope.item = function(arr){
       var newArr = [];
@@ -202,7 +228,7 @@ app.controller('MainCtrl', [
 
     $scope.addChoices = function(){
       // var formId = angular.element( document.querySelector('#choices') );
-      $scope.placeholders.push('More Options ' + $scope.placeholders.length);
+      $scope.placeholders.push('Option ' + ($scope.placeholders.length + 1));
       /* var newInp = '<input type="text" class="form-control" placeholder="{{"Option " + $scope.placeholders.length}}" + $scope.placholders.length " ng-model="choices[$index + 1].choiceText">';
        formId.append(newInp);*/
     };
@@ -282,3 +308,17 @@ app.controller('NavCtrl', [
 	  $scope.logOut = auth.logOut;
   }
 ]);
+
+app.controller('UserCtrl', [
+  '$scope',
+  'auth',
+  'user',
+  function($scope, auth, user){
+    $scope.user = user;
+    $scope.isLoggedIn = auth.isLoggedIn;
+	  $scope.currentUser = auth.currentUser;
+	  $scope.logOut = auth.logOut;
+	  
+	  $scope.userPolls = user.polls;
+  }
+  ]);

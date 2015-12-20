@@ -58,16 +58,24 @@ router.param('comment', function(req, res, next, id) {
 });
 
 router.param('user', function(req, res, next, id) {
-  var query = User.findById(id);
+  var query = User.findONe({_id: id});
 
   query.exec(function(err, user) {
     if(err) { return next(err); }
-    if(!user) { return next(new Error("can't find poll")); }
+    if(!user) { return next(new Error("can't find user")); }
 
     req.user = user;
     return next();
   });
 });
+
+// router.get('/users/:user', auth, function(req, res, next) {
+//   User.find(function(err,user) {
+//     if(err){ return next(err); }
+
+//     res.json(user);
+//   });
+// });
 
 router.get('/polls/:poll', function(req, res, next) {
   req.poll.populate('comments', function(err, poll) {
@@ -85,6 +93,18 @@ router.get('/polls/:poll', function(req, res, next) {
   });
 });
 
+router.get('/:user'), function(req, res, next) {
+  // req.user.populate('polls', function(err, user) {
+  //   if(err) { return next(err); }
+  //   res.json(user);
+  // });
+  
+  req.user(function(err, user) {
+    if(err) { return next(err); }
+    res.json(user);
+  });
+  
+};
 
 router.put('/polls/:poll/upvote', auth, function(req, res, next) {
   req.poll.upvote(function(err, poll) {
