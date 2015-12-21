@@ -9,23 +9,15 @@
   </h3>
 </div>
 
-<div ng-repeat="comment in poll.comments | orderBy:'-upvotes'">
-  <span class="glyphicon glyphicon-thumbs-up"
-    ng-click="incrementUpvotes(comment)"></span>
-  {{comment.upvotes}} - by {{comment.author}}
-  <span style="font-size:20px; margin-left:10px;">
-    {{comment.body}}
-  </span>
-</div>
+<div ng-repeat="comment in poll.choices">
+  
+  {{comment.votes}} {{choice.choiceText}}
 
-<form ng-submit="addComment()" style="margin-top:30px;" ng-show="isLoggedIn()">
-  <h3>Add a new comment</h3>
-  <div ng-hide="isLoggedIn()">
-    <<h3>You need to <a href="/#/login">Log In</a> of <a href="/#/register">Register</a> before you can create a poll.</h3>
-  </div>
+<form ng-submit="incrementVotes()" style="margin-top:30px;">
+  
 
   <div class="form-group">
-    <input type="text" class="form-control" placeholder="Comment" ng-model="body"></input>
+    <input type="radio" value="{{choice.choiceText}}" ng-model="choice.Votes">
   </div>
-  <button type="submit" class="btn btn-primary">Add Comment</button>
+  <button type="submit" class="btn btn-primary">Vote</button>
 </form>

@@ -14,6 +14,15 @@ app.config([
             return polls.getAll();
           }]
         }
+      }).state('home.polls', {
+        url: '/all',
+        templateUrl: '/polls.html',
+        controller: 'MainCtrl',
+        resolve: {
+          pollPromise: ['polls', function(polls) {
+            return polls.getAll();
+          }]
+        }
       }).state('polls', {
         url: '/polls/:id',
         templateUrl: '/polls.html',
@@ -23,13 +32,13 @@ app.config([
             return polls.get($stateParams.id);
           }]
         }
-      }).state('user', {
-        url: '/:id',
-        templateUrl: '/myPolls.html',
+      }).state('user.polls', {
+        url: '/:id/polls',
+        templateUrl: '/user/polls.html',
         controller: 'UserCtrl',
         resolve: {
-          user: ['$stateParams', 'user', function($stateParams, user) {
-            return user.get($stateParams.id);
+          polls: ['$stateParams', 'user', function($stateParams, user) {
+            return user.getPolls($stateParams.id);
           }]
         }
       }).state('login', {
@@ -125,7 +134,7 @@ app.factory('polls', ['$http', 'auth', function($http, auth) {
 
   o.create = function(poll) {
     return $http.post('/polls', poll, {
-      headers: {Authorization: 'Bearer '+auth.getToken()}
+      headers: {Authorization: 'Bearer '+ auth.getToken()}
     }).success(function(data) {
       o.polls.push(data);
     });
@@ -133,7 +142,7 @@ app.factory('polls', ['$http', 'auth', function($http, auth) {
 
   o.upvote = function(poll) {
     return $http.put('/polls/' + poll._id + '/upvote', null, {
-      headers: {Authorization: 'Bearer '+auth.getToken()}
+      headers: {Authorization: 'Bearer '+ auth.getToken()}
     }).success(function(data) {
         poll.upvotes += 1;
       });
@@ -147,7 +156,7 @@ app.factory('polls', ['$http', 'auth', function($http, auth) {
 
   o.deletePoll = function(poll) {
     return $http.delete('/polls/' + poll._id, {
-      headers: {Authorization: 'Bearer '+auth.getToken()}
+      headers: {Authorization: 'Bearer '+ auth.getToken()}
     }).success(function(data){
       //To referesh view.
       o.getAll();
@@ -156,15 +165,23 @@ app.factory('polls', ['$http', 'auth', function($http, auth) {
 
   o.addComment = function(id, comment) {
     return $http.post('/polls/' + id + '/comments', comment, {
-      headers: {Authorization: 'Bearer '+auth.getToken()}
+      headers: {Authorization: 'Bearer '+ auth.getToken()}
     });
   };
 
   o.upvoteComment = function(poll, comment) {
     return $http.put('/polls/' +  poll._id + '/comments/' + comment._id + '/upvote', null, {
-      headers: {Authorization: 'Bearer '+auth.getToken()}
+      headers: {Authorization: 'Bearer '+ auth.getToken()}
     }).success(function(data) {
         comment.upvotes += 1;
+      });
+  };
+  
+  o.upvoteChoice = function(poll, choice) {
+    return $http.put('/polls/' +  poll._id + '/choices/' + choice._id + '/upvote', null, {
+      headers: {Authorization: 'Bearer ' +auth.getToken()}
+    }).success(function(data) {
+        choice.upvotes += 1;
       });
   };
 
@@ -173,12 +190,23 @@ app.factory('polls', ['$http', 'auth', function($http, auth) {
 
 app.factory('user', ['$http', 'auth', '$window', function($http, auth, $window) {
     var u = {};
+    
     u.get = function(){
       if(auth.isLoggedIn()){
         var token = auth.getToken();
         var payload = JSON.parse($window.atob(token.split('.')[1]));
-        return $http.get('/' + payload._id).then(function(res){
-          return res.data;
+        return $http.get('/' + payload._id).then(function(data){
+          return data;
+          });
+      }
+    };
+    
+    u.getPolls = function(){
+      if(auth.isLoggedIn()){
+        var token = auth.getToken();
+        var payload = JSON.parse($window.atob(token.split('.')[1]));
+        return $http.get('/' + payload._id +'/polls').then(function(data){
+          return data;
           });
       }
     };
@@ -286,6 +314,10 @@ app.controller('PollsCtrl', [
       $scope.incrementUpvotes = function(comment) {
         polls.upvoteComment(poll, comment);
       };
+      
+      $scope.incrementVotes = function(choice) {
+        polls.upvoteChoice(poll, choice);
+      };
 
       $scope.isLoggedIn = auth.isLoggedIn;
   	  $scope.currentUser = auth.currentUser;
@@ -302,10 +334,13 @@ app.controller('PollsCtrl', [
 app.controller('NavCtrl', [
   '$scope',
   'auth',
-  function($scope, auth) {
+  'user',
+  function($scope, auth, user) {
     $scope.isLoggedIn = auth.isLoggedIn;
 	  $scope.currentUser = auth.currentUser;
 	  $scope.logOut = auth.logOut;
+	  $scope.user = user;
+	  $scope.getPolls = user.getPolls;
   }
 ]);
 
@@ -314,11 +349,11 @@ app.controller('UserCtrl', [
   'auth',
   'user',
   function($scope, auth, user){
-    $scope.user = user;
+    // $scope.user = user;
     $scope.isLoggedIn = auth.isLoggedIn;
 	  $scope.currentUser = auth.currentUser;
 	  $scope.logOut = auth.logOut;
 	  
-	  $scope.userPolls = user.polls;
+	 // $scope.userPolls = user.polls;
   }
   ]);

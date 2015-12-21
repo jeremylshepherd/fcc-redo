@@ -12,14 +12,17 @@
     <span ng-hide="poll.link">
       {{poll.title}}
     </span>
-    <div ng-repeat="choice in choices">
-      <span>{{choice.choiceText}}</span>
+    <div ng-repeat="choice in poll.choices">
+      <p>
+        <span>{{choice.choiceText}}</span>
+        <span>{{choice.votes}}</span>
+      </p>
     </div>
     <span>
       created by <a>{{poll.author}}</a>
     </span>
     <span>
-      <a href="#/polls/{{poll._id}}">Comments</a>
+      <a href="#/polls/{{poll._id}}">Vote Now</a>
     </span>
   </span>
 </div>

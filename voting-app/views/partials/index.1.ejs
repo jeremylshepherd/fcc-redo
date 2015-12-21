@@ -1,0 +1,58 @@
+<html>
+
+  <head>
+    <% include ../views/partials/head %>
+  </head>
+
+  <body ng-app="votingApp" ng-controller="MainCtrl">
+
+    <header>
+      <% include ../views/partials/nav %>
+    </header>
+
+    <div class="container-fluid">
+      <% include ../views/partials/jumbotron %>
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 col-md-offset-3">
+        <!-- tells ui-router where to render view -->
+        <ui-view></ui-view>
+      </div>
+    </div>
+
+    <div id="debug" class="row">
+      <pre>
+        {{item | json}}<br>
+        {{polls | json}}
+        
+      </pre>
+    </div>
+
+    <script type="text/ng-template" id="/home.html">
+      <% include ../views/partials/home %>
+    </script>
+
+    <script type="text/ng-template" id="/polls.html">
+      <% include ../views/partials/poll %>
+    </script>
+    
+    <script type="text/ng-template" id="mypolls.html">
+      
+      <% include ../views/partials/myPolls %>
+    </script>
+
+
+    <script type="text/ng-template" id="/register.html">
+      <% include ../views/partials/register %>
+    </script>
+    <script type="text/ng-template" id="/login.html">
+      <% include ../views/partials/login %>
+    </script><script type="text/ng-template" id="/user.html">
+      <% include ../views/partials/user %>
+    </script>
+    </script><script type="text/ng-template" id="/user.polls.html">
+      <% include ../views/partials/polls %>
+    </script>
+  </body>
+</html>

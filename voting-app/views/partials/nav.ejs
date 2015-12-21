@@ -1,4 +1,4 @@
-<div class="header" ng-controller="NavCtrl">
+<div class="header">
   <div class="navbar navbar-default" role="navigation">
     <div class="container">
       <div class="navbar-header">
@@ -15,6 +15,7 @@
 
         <ul class="nav navbar-nav">
           <li class="active"><a href="#/home">Home</a></li>
+          <li class="active"><a href="#/polls">View Polls</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right" ng-show="isLoggedIn()">
           <li><a ng-href="#/">Welcome {{ currentUser()}}!</a></li>

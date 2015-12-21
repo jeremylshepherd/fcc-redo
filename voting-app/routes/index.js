@@ -7,6 +7,8 @@ var jwt = require('express-jwt');
 var Poll = mongoose.model('Poll');
 var Comment = mongoose.model('Comment');
 var User = mongoose.model('User');
+// var ObjectId = mongoose.Types.ObjectId; 
+
 
 var auth = jwt({secret: 'SECRET', userProperty: 'payload'});
 
@@ -14,7 +16,7 @@ router.get('/', function(req, res) {
   res.render('index');
 });
 
-router.get('/polls', function(req, res, next) {
+router.get('/api/polls', function(req, res, next) {
   Poll.find(function(err, polls) {
     if(err){ return next(err); }
 
@@ -57,26 +59,6 @@ router.param('comment', function(req, res, next, id) {
   });
 });
 
-router.param('user', function(req, res, next, id) {
-  var query = User.findONe({_id: id});
-
-  query.exec(function(err, user) {
-    if(err) { return next(err); }
-    if(!user) { return next(new Error("can't find user")); }
-
-    req.user = user;
-    return next();
-  });
-});
-
-// router.get('/users/:user', auth, function(req, res, next) {
-//   User.find(function(err,user) {
-//     if(err){ return next(err); }
-
-//     res.json(user);
-//   });
-// });
-
 router.get('/polls/:poll', function(req, res, next) {
   req.poll.populate('comments', function(err, poll) {
     if(err) { return next(err); }
@@ -99,10 +81,18 @@ router.get('/:user'), function(req, res, next) {
   //   res.json(user);
   // });
   
-  req.user(function(err, user) {
+  var query = User.findOne({ _id: req.params.id});
+  query.exec(function(err, user) {
     if(err) { return next(err); }
-    res.json(user);
+    if(!user) { return next(new Error("can't find user")); }
+
+    req.user = user;
+    res.json(req.user)
   });
+  // req.user(function(err, user) {
+  //   if(err) { return next(err); }
+  //   res.json(user);
+  // });
   
 };
 
@@ -203,5 +193,25 @@ router.delete('/polls/:poll', auth, function(req, res, next) {
   });
 });
 
+router.get('/users', function(req, res, next) {
+  User.find().populate('polls').exec(function(err, users) {
+    if(err){return next(err);}
+    res.json(users);
+  });
+});
+
+router.get('/:id', function(req, res, next) {
+  User.findOne({'_id' : req.params.id}).populate('polls').exec(function(err, user) {
+    if(err) { return next(err);}
+    res.json(user);
+  });
+});
+
+router.get('/:id/polls', function(req, res, next){
+  Poll.find({'_creator' : req.params.id}).exec(function(err, polls) {
+    if(err){return next(err);}
+    res.json(polls);
+  });
+});
 
 module.exports = router;
